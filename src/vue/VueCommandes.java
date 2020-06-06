@@ -11,13 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import modele.Modele;
-import controleur.Controleur;
+import controleur.CtrlFindeTour;
 
 public class VueCommandes extends JPanel   {
 	
     private Modele m;
     private static JButton boutonAvance;
-    private Controleur ctrl;
+    private CtrlFindeTour ctrl;
     protected static int taille = VueModele.TAILLE;
     private int largeur, hauteur;
     
@@ -57,7 +57,7 @@ public class VueCommandes extends JPanel   {
 		boutonAvance.setIcon(new ImageIcon(Images.button));
 		this.add(boutonAvance);
 		
-		ctrl = new Controleur(m);
+		ctrl = new CtrlFindeTour(m);
 		boutonAvance.addActionListener(ctrl);
 		
 		boutonAvance.setFocusable(false) ;	//Eneleve le focus du bouton !

@@ -139,7 +139,6 @@ public class Modele extends Observable{
 	    		break;
 	    	case 1: 
 	    		assecheCellule(xM, yM, num, action);
-	        	desSelectionneTout();
 	    		break;   
 	    	case 2:
 	    		recupereArtefact(num);
@@ -170,10 +169,10 @@ public class Modele extends Observable{
      * @param action : int, numéro de l'action
      */
     public void assecheCellule(int i, int j, int num, int action) {
-    	if (estSelectionnablePourAsseche(cellules[i][j]) ) {
+    	if (estSelectionnablePourAsseche(cellules[i][j]) && cellules[xM][yM].estSelectionnee()) {
 			cellules[i][j].asseche();
 			joueurs[num].realiseAction(action); 
-			selctionneCel(i, j);
+			desSelectionneTout();
     	}
     }
     
@@ -211,22 +210,18 @@ public class Modele extends Observable{
 	    	switch (action) {
 	    	case 0:	   
 	    		bacASable(num, action);
-	    		desSelectionneTout(); 
 	    		break;
 	    	case 1: 
-	    		if (!teleporteAll)
-	    			teleporteJoueur(num);
-	    		else {
-	    	    	int x = joueurs[num].getPos().getX();	
-	    	    	int y = joueurs[num].getPos().getY();
+    	    	int x_old = joueurs[num].getPos().getX();	int y_old = joueurs[num].getPos().getY();
+	    		teleporteJoueur(num, action);
+	    		if (teleporteAll) {
+	    			int x_new = joueurs[num].getPos().getX();	int y_new = joueurs[num].getPos().getY();
 	    	    	for (int i=0; i< nbJoueurs; i++) {
-	    	    		if (joueurs[i].getPos().getX()==x &&joueurs[i].getPos().getY()==y  ) {
-	    	    			teleporteJoueur(i);
+	    	    		if (i!= num && joueurs[i].getPos().getX()==x_old &&joueurs[i].getPos().getY()==y_old  ) {
+	    	    			joueurs[i].setPos(cellules[x_new][y_new]);;
 	    	    		}
 	    	    	}
 	    		}
-    			joueurs[num].useActionSpec(action);
-	    		desSelectionneTout();        	
 	    		break;   
 	    	}    		
 	    	notifyObservers();
@@ -240,19 +235,23 @@ public class Modele extends Observable{
      * @param action : num de l'action ici 0
      */
     public void bacASable(int num, int action) {
-		if (estSelectionnable(cellules[xM][yM])) {   	
+		if (estSelectionnableBacASable(cellules[xM][yM]) && cellules[xM][yM].estSelectionnee()) {   	
 			cellules[xM][yM].asseche();
-			joueurs[num].useActionSpec(action);			
+			joueurs[num].useActionSpec(action);	
+    		desSelectionneTout();
 		}   	
     }
     
     /**
      * Réalise l'action spéciale Hélicoptère pour le joueur num 
      * @param num int : num du joueur
+     * @param action : num de l'action ici 1
      */
-    public void teleporteJoueur(int num) {
-		if (estSelectionnable(cellules[xM][yM])) {  
+    public void teleporteJoueur(int num, int action) {
+		if (estSelectionnableHelico(cellules[xM][yM]) && cellules[xM][yM].estSelectionnee()) {  
 			joueurs[num].setPos(cellules[xM][yM]);
+			joueurs[num].useActionSpec(action);
+    		desSelectionneTout(); 
 		}
     	
     }
@@ -267,7 +266,7 @@ public class Modele extends Observable{
     	int y = joueurs[num].getPos().getY();
     	boolean affiche = false;
     	for (int i=0; i< nbJoueurs; i++) {
-    		if (i!= num && joueurs[num].actionSpec(1) && joueurs[i].getPos().getX()==x &&joueurs[i].getPos().getY()==y  ) {
+    		if (cellules[xM][yM].estSelectionnee() && i!= num && joueurs[num].actionSpec(1) && joueurs[i].getPos().getX()==x &&joueurs[i].getPos().getY()==y  ) {
     			affiche = true;
     		}
     	}
@@ -276,15 +275,34 @@ public class Modele extends Observable{
     	else 
     		actionSpecJoueur(num, 1, false);
     }
+
+    
 	/**
-	 * Renvoie vrai si la cellule c est selectionnable 
+	 * Renvoie vrai si la cellule est seletionnable pour y déplacer un joueur par l'action spéciale Hélicoptère
+	 * @param c
 	 */
-	public boolean estSelectionnable(Cellule c) {
+	public boolean estSelectionnableHelico(Cellule c) {
 		int i = CtrlActJoueur.joueurActif();
-		return c.estValide() && joueurs[i].possedeUneActionSpc() && !(c.etat instanceof EtatSubmerge) ;
-		
+		return c.estValide() && joueurs[i].actionSpec(1) && !c.isNotSafe();
 	}
     
+	/**
+	 * Renvoie Vrai si la cellule est selectionnable pour l'assecher avec l'action spéciale bac à sable
+	 * @param c
+	 */
+	public boolean estSelectionnableBacASable(Cellule c) {
+		int i = CtrlActJoueur.joueurActif();
+		return c.estValide() && joueurs[i].actionSpec(0) && c.estInondee();		
+	}
+	
+	/**
+	 * Renvoie vrai si la cellule c est selectionnable de manière générale
+	 */
+	public boolean estSelectionnable(Cellule c) {
+		return estSelectionnableBacASable(c) || estSelectionnableHelico(c) ||  estSelectionnablePourAsseche(c);
+		
+	}
+	
     /**
      * Recherche une clé pour le joueur num
      * @param num : int
@@ -292,16 +310,16 @@ public class Modele extends Observable{
     public void rechercheCle(int num) {
     	if (joueurs[num].isAlive()) {
 	    	double proba = Math.random(); 
-			if (proba < 0.10) {
+			if (proba < 0.15) {
 				joueurs[num].initialiseActionsSpc();
 			} 
 			else {
-				if (proba < 0.30) {
+				if (proba < 0.40) {
 					joueurs[num].initialiseCle();
 				} 
 				
 				else{
-					if (proba < 0.50) {
+					if (proba < 0.55) {
 					joueurs[num].getPos().inonde();
 					}
 				}

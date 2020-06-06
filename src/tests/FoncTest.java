@@ -18,6 +18,7 @@ public class FoncTest {
 		}
 		return t;
 	}
+	
 	/**Compte le nombre de cases inondables i.e sèches ou inondées
 	 * @param m
 	 * @return

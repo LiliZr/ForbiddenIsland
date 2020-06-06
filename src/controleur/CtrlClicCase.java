@@ -18,13 +18,12 @@ public class CtrlClicCase implements MouseListener{
 		int i = (arg0.getX()/25)+1;
 		int j = (arg0.getY()/25)+1;
 		
-		//On Recupere les coordonnées de la cellule sur la quelle on a cliqué 
-		if (m.estSelectionnablePourAsseche(m.getCellule(i, j)) || m.estSelectionnable(m.getCellule(i, j))){
+		//On Recupere les coordonnées de la cellule sur la quelle on a cliqué pour les initialiser dans modèle
+		if (m.estSelectionnable(m.getCellule(i, j))){
 			m.desSelectionneTout();
 			m.initialiseCoordonnees(i, j);
 			m.selctionneCel(i, j);
 		}
-
 		
 	}
 

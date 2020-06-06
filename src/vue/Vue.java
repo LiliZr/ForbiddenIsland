@@ -34,6 +34,8 @@ public class Vue  {
 		c = new CtrlActJoueur(m);
 		frame.addKeyListener(c);
 		
+		//non redimensionnable
+		frame.setResizable(false);
 
 		
 		

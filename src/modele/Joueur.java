@@ -143,7 +143,8 @@ public class Joueur {
 	public void initialiseActionsSpc() {
 		Random r = new Random();	    		
 		int actSpci = r.nextInt(2);
-		this.actionsSpec[actSpci] = true;
+		if (!this.actionsSpec[actSpci] )
+			this.actionsSpec[actSpci] = true;
 	}
 	
 

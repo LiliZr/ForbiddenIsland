@@ -144,7 +144,18 @@ public class Cellule {
     public Spec getId() {
     	return this.id;
     }
+    /**
+     * Renvoie vrai si cette cellule est selctionnée, faux sinon
+     * @return
+     */
+    public boolean estSelectionnee() {
+    	return this.selected;
+    }
     
+    /**
+     * Met l'identifiant de la cellule à 'e'
+     * @param e : Spec
+     */
     public void setId(Spec e) {
     	this.id = e;
     }

@@ -11,6 +11,7 @@ public class CtrlActJoueur  implements KeyListener{
     Modele m;
     private static int cpt;
     private int previousKey;
+    private int previousJoueur;
     public CtrlActJoueur(Modele m) { 
     	this.m = m;
     	CtrlActJoueur.cpt = 0;
@@ -57,7 +58,7 @@ public class CtrlActJoueur  implements KeyListener{
     	/**
     	 * Oui ou non pour emporter les autres joueurs 
     	 */
-    	if (previousKey == KeyEvent.VK_H) {
+    	if (previousKey == KeyEvent.VK_H  && previousJoueur == numJoueur) {
     		if (key == KeyEvent.VK_Y) {
         		m.actionSpecJoueur(numJoueur, 1, true);
     		}
@@ -66,11 +67,14 @@ public class CtrlActJoueur  implements KeyListener{
     		}
     	}
 
-    	 
-    	previousKey = e.getKeyCode();
     	
+    	previousKey = e.getKeyCode();
+    	previousJoueur = numJoueur;
 
 	}
+	/**
+	 * Renvoie la direction corréspondante à la touche clavier
+	 */
 	public Direction valeurDirection(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_UP:
@@ -85,9 +89,15 @@ public class CtrlActJoueur  implements KeyListener{
 			return Direction.None;
 		}
 	}
+	/**
+	 * Incrémente le compteur pour passer au prochain joueur
+	 */
     public static void incremente() {
     	cpt++;
     }
+    /**
+     * Joueur à qui est le tour à l'instant présent
+     */
 	public static int joueurActif() {
 		return (cpt%Modele.nombreJoueurs());
 	}

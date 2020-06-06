@@ -10,7 +10,6 @@ import vue.Images;
 
 public class EtatSubmerge extends Etat {
 	
-
 	static final String path = Images.DIRECTORY + "submerge.jpg";
 	static Image image;
 

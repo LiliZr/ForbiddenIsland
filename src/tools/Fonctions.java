@@ -7,7 +7,8 @@ import modele.Cellule;
 public class Fonctions {
 
 	/**
-	 * initialise  toutes les cases d'un tableau à -1
+	 * Initialise  toutes les cases d'un tableau à -1
+	 * @param tab int[][]
 	 */
     public static void initialiseTabMoins1(int[][] tab) {
     	for(int i=0; i<tab.length; i++) {
@@ -18,7 +19,8 @@ public class Fonctions {
     }
     
     /**
-     * affiche le tableau d'entiers
+     * Affiche le tableau d'entiers
+     * @param tab int[][]
      */
     public static void affiche(int[][] tab) {
     	for(int i=0; i<tab.length; i++) {
@@ -29,7 +31,11 @@ public class Fonctions {
     	}
     }
     /**
-     * test si x, y appartient à tab
+     * Test si x, y appartient à tab
+     * @param tab int[][] tableau qu'on parcourt.
+     * @param x int
+     * @param y int
+     * @return
      */
     public static boolean  appartientTab(int[][] tab, int x, int y) {
     	for(int i=0; i<tab.length; i++) {
@@ -42,7 +48,12 @@ public class Fonctions {
     
     /**
      * Renvoie les indices des cellules "safe" 
-     */
+     * @param cellules. Cellule[][] : tableau de céllules qu'on va parcourir
+	 * @param minL int : minimum largeur du tableau 
+	 * @param minH int : minimum hauteur du tableau 
+	 * @param maxL int : max largeur du tableau
+	 * @param maxH int : max hauteur du tableau
+	 */
 	public static int[][] sontSafe(Cellule[][]  cellules, int minL, int minH, int maxL, int maxH){
 		int [][] cells;
 		int cpt = 0;
@@ -73,6 +84,8 @@ public class Fonctions {
 	
 	/**
 	 * Choisi aléatoirement n coordonnées  parmi tab
+	 * @param tab int[][]
+	 * @param n  int
 	 */
 	public static int[][] choisiNCases(int [][] tab, int n){
 		int[][] coord = new int[n][2];
@@ -91,7 +104,12 @@ public class Fonctions {
 	}
 	
 	/**
-	 * renvoie les coordonées des cellules inondables
+	 * Renvoie les coordonées des cellules inondables
+	 * @param cellules. Cellule[][] : tableau de céllules qu'on va parcourir
+	 * @param minL int : minimum largeur du tableau 
+	 * @param minH int : minimum hauteur du tableau 
+	 * @param maxL int : max largeur du tableau
+	 * @param maxH int : max hauteur du tableau
 	 */
 	public static int[][] sontInondables(Cellule[][]  cellules,  int minL, int minH, int maxL, int maxH){
 		int [][] cells;

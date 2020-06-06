@@ -20,11 +20,11 @@ public class EtatInonde extends Etat {
 	 * Charge l'image de cet etat
 	 */
 	public static void chargeImage() {
-			try {
-				image = ImageIO.read(new File(path));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
+		try {
+			image = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}			
 	}
 	
 	@Override
